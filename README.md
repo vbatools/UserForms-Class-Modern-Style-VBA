@@ -109,3 +109,20 @@ This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENS
 ## Examples
 
 The repository includes a test form (`frmTest.frm`) demonstrating the capabilities of the class. You can use this as a reference for implementing the styling in your own projects.
+
+## Accessing Individual Controls
+
+The clsModernStyle class provides methods to access individual styled controls:
+
+- `getItemByIndex(index As Integer) As clsModernStyle` - Returns a control style object by its index position
+- `getItemByName(Name As String) As clsModernStyle` - Returns a control style object by its name
+
+These methods allow you to programmatically modify the appearance or behavior of specific controls after the initial styling has been applied.
+
+## Additional Properties
+
+The class also provides the following properties for managing and retrieving information about styled controls:
+
+- `Count As Byte` - Returns the total number of styled controls in the collection
+- `Items As Collection` - Returns the collection of all styled control objects
+- `Version As String` - Returns version information about the clsModernStyle class

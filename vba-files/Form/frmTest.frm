@@ -18,6 +18,17 @@ Option Explicit
 Dim MStyleItem      As clsModernStyle
 
 
+Private Sub btnItem_Click()
+    'MStyleItem.getItemByIndex(1)
+    With MStyleItem.getItemByName(TextBox1.Name)
+        .ColorBackGroundOff = vbRed
+        .ColorBackGroundOn = vbGreen
+    End With
+End Sub
+
+Private Sub btnStyle_Click()
+    Call MStyleItem.Initialize(Me)
+End Sub
 
 Private Sub UserForm_Initialize()
     With Me
@@ -42,5 +53,4 @@ Private Sub UserForm_Initialize()
 
 
     Set MStyleItem = New clsModernStyle
-    Call MStyleItem.Initialize(Me)
 End Sub
