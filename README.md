@@ -126,3 +126,37 @@ The class also provides the following properties for managing and retrieving inf
 - `Count As Byte` - Returns the total number of styled controls in the collection
 - `Items As Collection` - Returns the collection of all styled control objects
 - `Version As String` - Returns version information about the clsModernStyle class
+
+## Setting Title Text via ControlTipText
+
+You can set the title text that appears above controls by using the `ControlTipText` property of your form controls. The clsModernStyle class automatically uses this property to display titles:
+
+```vba
+' Set the ControlTipText property in your UserForm controls
+MyTextBox.ControlTipText = "Enter your name"
+MyComboBox.ControlTipText = "Select an option"
+MyCheckBox.ControlTipText = "Agree to terms"
+
+' When you initialize the style, the ControlTipText will be used as the title
+Dim style As New clsModernStyle
+style.Initialize Me
+```
+
+The title will appear above the control when it receives focus and will animate to a smaller size and move to the top-left corner when the control has content.
+
+## Setting Icons
+
+You can set icons for controls by using the `Tag` property of your form controls. The clsModernStyle class uses this property to display icons:
+
+```vba
+' Set the Tag property to an icon constant from the enumIcons enumeration
+MyTextBox.Tag = 59193  ' Using numeric value for icon
+' Or use the enum value if available in your VBA environment
+MyComboBox.Tag = "61735"  ' Using string value for icon
+
+' When you initialize the style, the Tag will be used as the icon
+Dim style As New clsModernStyle
+style.Initialize Me
+```
+
+The icon will appear to the left of the control. You can use any of the icon constants defined in the `enumIcons` enumeration in the clsModernStyle class. Icons are displayed using the Segoe MDL2 Assets font.
