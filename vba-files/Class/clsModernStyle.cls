@@ -12,9 +12,9 @@ Option Explicit
 '========================================================================================
 ' Class:           clsModernStyle
 ' Author:          VBATools
-' Version:         1.0.8
+' Version:         1.0.9
 ' Creation Date:   10.10.2025 15:30
-' Update Date:     01.11.2025 09:59
+' Update Date:     03.11.2025 09:01
 '
 ' Purpose:
 '   Class designed to style MSForms controls with a modern design.
@@ -44,6 +44,7 @@ Option Explicit
 ' License:
 '   Apache License
 '========================================================================================
+
 '========================================================================================
 ' Enumeration: enumIcons
 ' Purpose: Enumeration of icons for various controls
@@ -66,7 +67,7 @@ Public Enum enumIcons
     FavoriteStarFill = 59189                ' Star (filled)
     Heart = 60241                           ' Heart (normal)
     HeartFill = 60242                       ' Heart (filled)
-    InkingColorFill = 6075                 ' Brush (filled)
+    InkingColorFill = 60775                 ' Brush (filled)
     InkingColorOutline = 60774              ' Brush (outline)
     PaginationDotOutline10 = 61734          ' Dot (outline)
     PaginationDotSolid10 = 61735            ' Dot (filled)
@@ -77,13 +78,13 @@ Public Enum enumIcons
     ToggleOn = 60433                        ' Toggle switch (on)
     ToggleThumb = 60436                     ' Toggle switch thumb
 End Enum
-'================================================================================
-' Section: Global variables and constants
-'================================================================================
-' Collection of all style items
-Private mItems      As Collection
+
+'========================================================================================
+' Section: Constants
+'========================================================================================
 ' Font constants
 Private Const FONT_NAME_ICON As String = "Segoe MDL2 Assets"
+
 ' Constants for control types
 Private Const CONTROL_TYPE_TEXTBOX As String = "TextBox"
 Private Const CONTROL_TYPE_COMBOBOX As String = "ComboBox"
@@ -98,6 +99,7 @@ Private Const CONTROL_TYPE_IMAGE As String = "Image"
 Private Const CONTROL_TYPE_TABSTRIP As String = "TabStrip"
 Private Const CONTROL_TYPE_SCROLLBAR As String = "ScrollBar"
 Private Const CONTROL_TYPE_SPINBUTTON As String = "SpinButton"
+
 ' Constants for additional control names
 Private Const BAR_BOTTOM As String = "_barBottom"
 Private Const BAR_TITLE As String = "_barTitle"
@@ -105,11 +107,17 @@ Private Const BAR_ICON As String = "_barIcon"
 Private Const BACK_GROUND As String = "_BackGround"
 Private Const DROP_ARROW As String = "_DropArrow"
 Private Const BTN_CLEAR As String = "_BtnClear"
+
 ' Constants for control behavior
 Private Const CONTROL_SWITCH As String = "SWITCH"
-' Objects with event handlers
-Private WithEvents myForm As MSForms.UserForm
-Attribute myForm.VB_VarHelpID = -1
+
+'========================================================================================
+' Section: Event Handler Objects
+'========================================================================================
+Private WithEvents mUserForm As MSForms.UserForm
+Attribute mUserForm.VB_VarHelpID = -1
+
+' Controls with event handlers
 Private WithEvents mTextBox As MSForms.TextBox
 Attribute mTextBox.VB_VarHelpID = -1
 Private WithEvents mComboBox As MSForms.ComboBox
@@ -118,7 +126,6 @@ Private WithEvents mListBox As MSForms.ListBox
 Attribute mListBox.VB_VarHelpID = -1
 Private WithEvents mFrame As MSForms.Frame
 Attribute mFrame.VB_VarHelpID = -1
-'Private WithEvents mPage As MSForms.MultiPage
 Private WithEvents mLabel As MSForms.label
 Attribute mLabel.VB_VarHelpID = -1
 Private WithEvents mCommandButton As MSForms.CommandButton
@@ -127,49 +134,34 @@ Private WithEvents mCheckBox As MSForms.CheckBox
 Attribute mCheckBox.VB_VarHelpID = -1
 Private WithEvents mOptionButton As MSForms.OptionButton
 Attribute mOptionButton.VB_VarHelpID = -1
-'================================================================================
-' Section: Additional controls for styling
-'================================================================================
-Private mBarBottom  As MSForms.label
-Private mBarTitle   As MSForms.label
-Private mBarIcon    As MSForms.label
-Private mBackGround As MSForms.label
-Private WithEvents mDropArrow As MSForms.label
-Attribute mDropArrow.VB_VarHelpID = -1
-Private WithEvents mBtnClear As MSForms.label
-Attribute mBtnClear.VB_VarHelpID = -1
-Private WithEvents mTgBorder As MSForms.label
-Attribute mTgBorder.VB_VarHelpID = -1
-Private WithEvents mChkBoxBtn As MSForms.label
-Attribute mChkBoxBtn.VB_VarHelpID = -1
-Private WithEvents mChkBoxCaption As MSForms.label
-Attribute mChkBoxCaption.VB_VarHelpID = -1
-'================================================================================
-' Section: Main control properties
-'================================================================================
+
+'========================================================================================
+' Section: Style Elements
+'========================================================================================
+' Collection of all style items
+Private mStyleItems As Collection
+
 ' Main control variables
 Private mControl    As MSForms.control
-Private mType       As String
-Private mName       As String
+Private mControlType As String
+Private mControlName As String
 Private mControlTipText As String
 Private mVisible    As Boolean
 Private mLocked     As Boolean
 Private mEnabled    As Boolean
+
 ' Positioning and sizes
 Private mTop        As Single
 Private mLeft       As Single
 Private mHeight     As Single
 Private mWidth      As Single
-'================================================================================
-' Section: Font properties
-'================================================================================
+
+' Font properties
 Private mFontSizeTitleOff As Integer
 Private mFontSizeTitleOn As Integer
 Private mFontName   As String
-'================================================================================
-' Section: Color properties for various elements
-'================================================================================
-' Colors for various elements
+
+' Color properties for various elements
 Private mColorBarTitleOn As XlRgbColor
 Private mColorBarTitleOff As XlRgbColor
 Private mColorBarBottomOn As XlRgbColor
@@ -180,35 +172,58 @@ Private mColorBarIconOn As XlRgbColor
 Private mColorBarIconOff As XlRgbColor
 Private mColorDropArrowOn As XlRgbColor
 Private mColorDropArrowOff As XlRgbColor
-' Colors for toggles
+
+' Colors for toggles and checkboxes
 Private mColorTgBorderOn As XlRgbColor
 Private mColorTgBorderOff As XlRgbColor
 Private mColorChkBoxBtnOn As XlRgbColor
 Private mColorChkBoxBtnOff As XlRgbColor
 Private mColorChkBoxCaptionOn As XlRgbColor
 Private mColorChkBoxCaptionOff As XlRgbColor
-'================================================================================
-' Section: Character properties for arrows and switches
-'================================================================================
+
+' Character properties for arrows and switches
 Private mChrDropArrowOn As String
 Private mChrDropArrowOff As String
 Private mChrChkBoxBtnOn As String
 Private mChrChkBoxBtnOff As String
 Private mChrOptBoxBtnOn As String
 Private mChrOptBoxBtnOff As String
+
+' Additional controls for styling
+Private mBarBottom  As MSForms.label
+Private mBarTitle   As MSForms.label
+Private mBarIcon    As MSForms.label
+Private mBackGround As MSForms.label
+
+Private WithEvents mDropArrow As MSForms.label
+Attribute mDropArrow.VB_VarHelpID = -1
+Private WithEvents mBtnClear As MSForms.label
+Attribute mBtnClear.VB_VarHelpID = -1
+Private WithEvents mTgBorder As MSForms.label
+Attribute mTgBorder.VB_VarHelpID = -1
+Private WithEvents mChkBoxBtn As MSForms.label
+Attribute mChkBoxBtn.VB_VarHelpID = -1
+Private WithEvents mChkBoxCaption As MSForms.label
+Attribute mChkBoxCaption.VB_VarHelpID = -1
+
 '================================================================================
 ' Section: Properties for item collection
 '================================================================================
-Public Property Get Items() As Collection
-    Set Items = mItems
+' Property: StyleItems
+' Purpose: Gets or sets the collection of all style items
+Public Property Get StyleItems() As Collection
+    Set StyleItems = mStyleItems
 End Property
 
-Public Property Set Items(ByRef Items As Collection)
-    Set mItems = Items
+Public Property Set StyleItems(ByRef Items As Collection)
+    Set mStyleItems = Items
 End Property
+
 '================================================================================
 ' Section: Properties for main control
 '================================================================================
+' Property: Control
+' Purpose: Gets or sets the main control being styled
 Public Property Get control() As MSForms.control
     Set control = mControl
 End Property
@@ -216,9 +231,12 @@ End Property
 Public Property Set control(ByRef control As MSForms.control)
     Set mControl = control
 End Property
+
 '================================================================================
 ' Section: Properties for various control types
 '================================================================================
+' Property: TextBox
+' Purpose: Gets or sets the TextBox control reference
 Public Property Get TextBox() As MSForms.TextBox
     Set TextBox = mTextBox
 End Property
@@ -227,6 +245,8 @@ Public Property Set TextBox(ByRef TextBox As MSForms.TextBox)
     Set mTextBox = TextBox
 End Property
 
+' Property: ComboBox
+' Purpose: Gets or sets the ComboBox control reference
 Public Property Get ComboBox() As MSForms.ComboBox
     Set ComboBox = mComboBox
 End Property
@@ -235,6 +255,8 @@ Public Property Set ComboBox(ByRef ComboBox As MSForms.ComboBox)
     Set mComboBox = ComboBox
 End Property
 
+' Property: ListBox
+' Purpose: Gets or sets the ListBox control reference
 Public Property Get ListBox() As MSForms.ListBox
     Set ListBox = mListBox
 End Property
@@ -243,6 +265,8 @@ Public Property Set ListBox(ByRef ListBox As MSForms.ListBox)
     Set mListBox = ListBox
 End Property
 
+' Property: CheckBox
+' Purpose: Gets or sets the CheckBox control reference
 Public Property Get CheckBox() As MSForms.CheckBox
     Set CheckBox = mCheckBox
 End Property
@@ -251,6 +275,8 @@ Public Property Set CheckBox(ByRef CheckBox As MSForms.CheckBox)
     Set mCheckBox = CheckBox
 End Property
 
+' Property: OptionButton
+' Purpose: Gets or sets the OptionButton control reference
 Public Property Get OptionButton() As MSForms.OptionButton
     Set OptionButton = mOptionButton
 End Property
@@ -259,6 +285,8 @@ Public Property Set OptionButton(ByRef OptionButton As MSForms.OptionButton)
     Set mOptionButton = OptionButton
 End Property
 
+' Property: Frame
+' Purpose: Gets or sets the Frame control reference
 Public Property Get Frame() As MSForms.Frame
     Set Frame = mFrame
 End Property
@@ -267,6 +295,8 @@ Public Property Set Frame(ByRef Frame As MSForms.Frame)
     Set mFrame = Frame
 End Property
 
+' Property: Label
+' Purpose: Gets or sets the Label control reference
 Public Property Get label() As MSForms.label
     Set label = mLabel
 End Property
@@ -275,6 +305,8 @@ Public Property Set label(ByRef label As MSForms.label)
     Set mLabel = label
 End Property
 
+' Property: CommandButton
+' Purpose: Gets or sets the CommandButton control reference
 Public Property Get CommandButton() As MSForms.CommandButton
     Set CommandButton = mCommandButton
 End Property
@@ -282,28 +314,35 @@ End Property
 Public Property Set CommandButton(ByRef CommandButton As MSForms.CommandButton)
     Set mCommandButton = CommandButton
 End Property
+
 '================================================================================
 ' Section: Properties for control type and name
 '================================================================================
+' Property: ControlType
+' Purpose: Gets or sets the type of the control (e.g., "TextBox", "ComboBox")
 Public Property Get ControlType() As String
-    ControlType = mType
+    ControlType = mControlType
 End Property
 
 Public Property Let ControlType(ByVal NameType As String)
-    mType = NameType
+    mControlType = NameType
 End Property
 
+' Property: Name
+' Purpose: Gets or sets the name of the control
 Public Property Get Name() As String
-    Name = mName
+    Name = mControlName
 End Property
 
 Public Property Let Name(ByVal Name As String)
-    mName = Name
+    mControlName = Name
 End Property
+
 '================================================================================
 ' Section: Properties for visibility, locking and availability
 '================================================================================
-' Properties for visibility
+' Property: Visible
+' Purpose: Gets or sets the visibility of the control and all associated style elements
 Public Property Get Visible() As Boolean
     Visible = mVisible
 End Property
@@ -320,7 +359,9 @@ Public Property Let Visible(ByRef Visible As Boolean)
     Call SetControlVisibility(mDropArrow, Visible)
     Call SetControlVisibility(mBtnClear, Visible)
 End Property
-' Properties for locking state
+
+' Property: Locked
+' Purpose: Gets or sets the locked state of the control and all associated style elements
 Public Property Get Locked() As Boolean
     Locked = mLocked
 End Property
@@ -338,7 +379,9 @@ Public Property Let Locked(ByRef Locked As Boolean)
     Call SetControlLock(mDropArrow, Locked)
     Call SetControlLock(mBtnClear, Locked)
 End Property
-' Properties for availability state
+
+' Property: Enabled
+' Purpose: Gets or sets the enabled state of the control and all associated style elements
 Public Property Get Enabled() As Boolean
     Enabled = mEnabled
 End Property
@@ -356,6 +399,7 @@ Public Property Let Enabled(ByRef Enabled As Boolean)
     Call SetControlEnabled(mDropArrow, Enabled)
     Call SetControlEnabled(mBtnClear, Enabled)
 End Property
+
 '---------------------------------------------------------------------------------------
 ' Procedure: SetControlEnabled
 ' Purpose: Internal method to set the availability state of a control
@@ -366,6 +410,7 @@ End Property
 Private Sub SetControlEnabled(ByRef control As MSForms.control, ByVal isEnabled As Boolean)
     If Not control Is Nothing Then control.Enabled = isEnabled
 End Sub
+
 '---------------------------------------------------------------------------------------
 ' Procedure: SetControlVisibility
 ' Purpose: Internal method to set the visibility of a control
@@ -376,6 +421,7 @@ End Sub
 Private Sub SetControlVisibility(ByRef control As MSForms.control, ByVal isVisible As Boolean)
     If Not control Is Nothing Then control.Visible = isVisible
 End Sub
+
 '---------------------------------------------------------------------------------------
 ' Procedure: SetControlLock
 ' Purpose: Internal method to set the locking state of a control
@@ -386,9 +432,12 @@ End Sub
 Private Sub SetControlLock(ByRef control As MSForms.control, ByVal isLocked As Boolean)
     If Not control Is Nothing Then control.Locked = isLocked
 End Sub
+
 '================================================================================
 ' Section: Properties for tooltip
 '================================================================================
+' Property: ControlTipText
+' Purpose: Gets or sets the tooltip text for the control
 Public Property Get ControlTipText() As String
     ControlTipText = mControlTipText
 End Property
@@ -396,9 +445,12 @@ End Property
 Public Property Let ControlTipText(ByVal ControlTipText As String)
     mControlTipText = ControlTipText
 End Property
+
 '================================================================================
 ' Section: Properties for style element colors
 '================================================================================
+' Property: ColorBarTitleOn
+' Purpose: Gets or sets the color of the title bar when control is active
 Public Property Get ColorBarTitleOn() As XlRgbColor
     ColorBarTitleOn = mColorBarTitleOn
 End Property
@@ -407,6 +459,8 @@ Public Property Let ColorBarTitleOn(ByVal Color As XlRgbColor)
     mColorBarTitleOn = Color
 End Property
 
+' Property: ColorBarBottomOn
+' Purpose: Gets or sets the color of the bottom bar when control is active
 Public Property Get ColorBarBottomOn() As XlRgbColor
     ColorBarBottomOn = mColorBarBottomOn
 End Property
@@ -415,6 +469,8 @@ Public Property Let ColorBarBottomOn(ByVal Color As XlRgbColor)
     mColorBarBottomOn = Color
 End Property
 
+' Property: ColorBarBottomOff
+' Purpose: Gets or sets the color of the bottom bar when control is inactive
 Public Property Get ColorBarBottomOff() As XlRgbColor
     ColorBarBottomOff = mColorBarBottomOff
 End Property
@@ -423,6 +479,8 @@ Public Property Let ColorBarBottomOff(ByVal Color As XlRgbColor)
     mColorBarBottomOff = Color
 End Property
 
+' Property: ColorBarTitleOff
+' Purpose: Gets or sets the color of the title bar when control is inactive
 Public Property Get ColorBarTitleOff() As XlRgbColor
     ColorBarTitleOff = mColorBarTitleOff
 End Property
@@ -431,6 +489,8 @@ Public Property Let ColorBarTitleOff(ByVal Color As XlRgbColor)
     mColorBarTitleOff = Color
 End Property
 
+' Property: ColorBackGroundOn
+' Purpose: Gets or sets the background color when control is active
 Public Property Get ColorBackGroundOn() As XlRgbColor
     ColorBackGroundOn = mColorBackGroundOn
 End Property
@@ -439,6 +499,8 @@ Public Property Let ColorBackGroundOn(ByVal Color As XlRgbColor)
     mColorBackGroundOn = Color
 End Property
 
+' Property: ColorBackGroundOff
+' Purpose: Gets or sets the background color when control is inactive
 Public Property Get ColorBackGroundOff() As XlRgbColor
     ColorBackGroundOff = mColorBackGroundOff
 End Property
@@ -447,6 +509,8 @@ Public Property Let ColorBackGroundOff(ByVal Color As XlRgbColor)
     mColorBackGroundOff = Color
 End Property
 
+' Property: ColorBarIconOn
+' Purpose: Gets or sets the icon color when control is active
 Public Property Get ColorBarIconOn() As XlRgbColor
     ColorBarIconOn = mColorBarIconOn
 End Property
@@ -455,6 +519,8 @@ Public Property Let ColorBarIconOn(ByVal Color As XlRgbColor)
     mColorBarIconOn = Color
 End Property
 
+' Property: ColorBarIconOff
+' Purpose: Gets or sets the icon color when control is inactive
 Public Property Get ColorBarIconOff() As XlRgbColor
     ColorBarIconOff = mColorBarIconOff
 End Property
@@ -463,6 +529,8 @@ Public Property Let ColorBarIconOff(ByVal Color As XlRgbColor)
     mColorBarIconOff = Color
 End Property
 
+' Property: ColorDropArrowOn
+' Purpose: Gets or sets the dropdown arrow color when control is active
 Public Property Get ColorDropArrowOn() As XlRgbColor
     ColorDropArrowOn = mColorDropArrowOn
 End Property
@@ -471,6 +539,8 @@ Public Property Let ColorDropArrowOn(ByVal Color As XlRgbColor)
     mColorDropArrowOn = Color
 End Property
 
+' Property: ColorDropArrowOff
+' Purpose: Gets or sets the dropdown arrow color when control is inactive
 Public Property Get ColorDropArrowOff() As XlRgbColor
     ColorDropArrowOff = mColorDropArrowOff
 End Property
@@ -478,9 +548,12 @@ End Property
 Public Property Let ColorDropArrowOff(ByVal Color As XlRgbColor)
     mColorDropArrowOff = Color
 End Property
+
 '================================================================================
 ' Section: Properties for switch colors
 '================================================================================
+' Property: ColorTgBorderOn
+' Purpose: Gets or sets the toggle border color when active
 Public Property Let ColorTgBorderOn(ByVal Color As XlRgbColor)
     mColorTgBorderOn = Color
 End Property
@@ -489,6 +562,8 @@ Public Property Get ColorTgBorderOn() As XlRgbColor
     ColorTgBorderOn = mColorTgBorderOn
 End Property
 
+' Property: ColorTgBorderOff
+' Purpose: Gets or sets the toggle border color when inactive
 Public Property Let ColorTgBorderOff(ByVal Color As XlRgbColor)
     mColorTgBorderOff = Color
 End Property
@@ -497,6 +572,8 @@ Public Property Get ColorTgBorderOff() As XlRgbColor
     ColorTgBorderOff = mColorTgBorderOff
 End Property
 
+' Property: ColorChkBoxBtnOn
+' Purpose: Gets or sets the checkbox button color when active
 Public Property Let ColorChkBoxBtnOn(ByVal Color As XlRgbColor)
     mColorChkBoxBtnOn = Color
 End Property
@@ -505,6 +582,8 @@ Public Property Get ColorChkBoxBtnOn() As XlRgbColor
     ColorChkBoxBtnOn = mColorChkBoxBtnOn
 End Property
 
+' Property: ColorChkBoxBtnOff
+' Purpose: Gets or sets the checkbox button color when inactive
 Public Property Let ColorChkBoxBtnOff(ByVal Color As XlRgbColor)
     mColorChkBoxBtnOff = Color
 End Property
@@ -513,6 +592,8 @@ Public Property Get ColorChkBoxBtnOff() As XlRgbColor
     ColorChkBoxBtnOff = mColorChkBoxBtnOff
 End Property
 
+' Property: ColorTgFore
+' Purpose: Gets or sets the foreground color for toggle controls
 Public Property Let ColorTgFore(ByVal Color As XlRgbColor)
     If Not mChkBoxCaption Is Nothing Then mChkBoxCaption.ForeColor = Color
 End Property
@@ -521,6 +602,8 @@ Public Property Get ColorTgFore() As XlRgbColor
     If Not mChkBoxCaption Is Nothing Then ColorTgFore = mChkBoxCaption.ForeColor
 End Property
 
+' Property: ColorChkBoxCaptionOn
+' Purpose: Gets or sets the checkbox caption color when active
 Public Property Let ColorChkBoxCaptionOn(ByVal Color As Long)
     mColorChkBoxCaptionOn = Color
 End Property
@@ -529,6 +612,8 @@ Public Property Get ColorChkBoxCaptionOn() As Long
     ColorChkBoxCaptionOn = mColorChkBoxCaptionOn
 End Property
 
+' Property: ColorChkBoxCaptionOff
+' Purpose: Gets or sets the checkbox caption color when inactive
 Public Property Let ColorChkBoxCaptionOff(ByVal Color As Long)
     mColorChkBoxCaptionOff = Color
 End Property
@@ -536,9 +621,12 @@ End Property
 Public Property Get ColorChkBoxCaptionOff() As Long
     ColorChkBoxCaptionOff = mColorChkBoxCaptionOff
 End Property
+
 '================================================================================
 ' Section: Properties for arrow characters
 '================================================================================
+' Property: ChrDropArrowOn
+' Purpose: Gets or sets the character for dropdown arrow when active
 Public Property Let ChrDropArrowOn(ByVal chr As String)
     mChrDropArrowOn = chr
 End Property
@@ -547,6 +635,8 @@ Public Property Get ChrDropArrowOn() As String
     ChrDropArrowOn = mChrDropArrowOn
 End Property
 
+' Property: ChrDropArrowOff
+' Purpose: Gets or sets the character for dropdown arrow when inactive
 Public Property Let ChrDropArrowOff(ByVal chr As String)
     mChrDropArrowOff = chr
 End Property
@@ -555,6 +645,8 @@ Public Property Get ChrDropArrowOff() As String
     ChrDropArrowOff = mChrDropArrowOff
 End Property
 
+' Property: ChrChkBoxBtnOn
+' Purpose: Gets or sets the character for checkbox button when active
 Public Property Let ChrChkBoxBtnOn(ByVal Code As String)
     mChrChkBoxBtnOn = Code
 End Property
@@ -563,6 +655,8 @@ Public Property Get ChrChkBoxBtnOn() As String
     ChrChkBoxBtnOn = mChrChkBoxBtnOn
 End Property
 
+' Property: ChrChkBoxBtnOff
+' Purpose: Gets or sets the character for checkbox button when inactive
 Public Property Let ChrChkBoxBtnOff(ByVal Code As String)
     mChrChkBoxBtnOff = Code
 End Property
@@ -571,6 +665,8 @@ Public Property Get ChrChkBoxBtnOff() As String
     ChrChkBoxBtnOff = mChrChkBoxBtnOff
 End Property
 
+' Property: ChrOptBoxBtnOn
+' Purpose: Gets or sets the character for option button when active
 Public Property Let ChrOptBoxBtnOn(ByVal Code As String)
     mChrOptBoxBtnOn = Code
 End Property
@@ -579,6 +675,8 @@ Public Property Get ChrOptBoxBtnOn() As String
     ChrOptBoxBtnOn = mChrOptBoxBtnOn
 End Property
 
+' Property: ChrOptBoxBtnOff
+' Purpose: Gets or sets the character for option button when inactive
 Public Property Let ChrOptBoxBtnOff(ByVal Code As String)
     mChrOptBoxBtnOff = Code
 End Property
@@ -586,9 +684,12 @@ End Property
 Public Property Get ChrOptBoxBtnOff() As String
     ChrOptBoxBtnOff = mChrOptBoxBtnOff
 End Property
+
 '================================================================================
 ' Section: Properties for positioning and sizes
 '================================================================================
+' Property: Top
+' Purpose: Gets or sets the top position of the control
 Public Property Get top() As Single
     top = mTop
 End Property
@@ -597,6 +698,8 @@ Public Property Let top(ByVal Size As Single)
     mTop = Size
 End Property
 
+' Property: Left
+' Purpose: Gets or sets the left position of the control
 Public Property Get left() As Single
     left = mLeft
 End Property
@@ -605,6 +708,8 @@ Public Property Let left(ByVal Size As Single)
     mLeft = Size
 End Property
 
+' Property: Height
+' Purpose: Gets or sets the height of the control
 Public Property Get height() As Single
     height = mHeight
 End Property
@@ -613,6 +718,8 @@ Public Property Let height(ByVal Size As Single)
     mHeight = Size
 End Property
 
+' Property: Width
+' Purpose: Gets or sets the width of the control
 Public Property Get width() As Single
     width = mWidth
 End Property
@@ -620,9 +727,12 @@ End Property
 Public Property Let width(ByVal Size As Single)
     mWidth = Size
 End Property
+
 '================================================================================
 ' Section: Properties for font
 '================================================================================
+' Property: FontSizeTitleOff
+' Purpose: Gets or sets the font size for inactive state
 Public Property Get FontSizeTitleOff() As Integer
     FontSizeTitleOff = mFontSizeTitleOff
 End Property
@@ -631,6 +741,8 @@ Public Property Let FontSizeTitleOff(ByVal Size As Integer)
     mFontSizeTitleOff = Size
 End Property
 
+' Property: FontSizeTitleOn
+' Purpose: Gets or sets the font size for active state
 Public Property Get FontSizeTitleOn() As Integer
     FontSizeTitleOn = mFontSizeTitleOn
 End Property
@@ -639,6 +751,8 @@ Public Property Let FontSizeTitleOn(ByVal Size As Integer)
     mFontSizeTitleOn = Size
 End Property
 
+' Property: FontName
+' Purpose: Gets or sets the font name for the control
 Public Property Get FontName() As String
     FontName = mFontName
 End Property
@@ -646,9 +760,12 @@ End Property
 Public Property Let FontName(ByVal Name As String)
     mFontName = Name
 End Property
+
 '================================================================================
 ' Section: Properties for additional style elements
 '================================================================================
+' Property: BarBottom
+' Purpose: Gets or sets the bottom bar label control
 Public Property Get BarBottom() As MSForms.label
     Set BarBottom = mBarBottom
 End Property
@@ -657,6 +774,8 @@ Public Property Set BarBottom(ByRef label As MSForms.label)
     Set mBarBottom = label
 End Property
 
+' Property: BarTitle
+' Purpose: Gets or sets the title bar label control
 Public Property Set BarTitle(ByRef label As MSForms.label)
     Set mBarTitle = label
 End Property
@@ -665,6 +784,8 @@ Public Property Get BarTitle() As MSForms.label
     Set BarTitle = mBarTitle
 End Property
 
+' Property: BarIcon
+' Purpose: Gets or sets the icon label control
 Public Property Set BarIcon(ByRef label As MSForms.label)
     Set mBarIcon = label
 End Property
@@ -673,6 +794,8 @@ Public Property Get BarIcon() As MSForms.label
     Set BarIcon = mBarIcon
 End Property
 
+' Property: BackGround
+' Purpose: Gets or sets the background label control
 Public Property Set BackGround(ByRef label As MSForms.label)
     Set mBackGround = label
 End Property
@@ -681,6 +804,8 @@ Public Property Get BackGround() As MSForms.label
     Set BackGround = mBackGround
 End Property
 
+' Property: DropArrow
+' Purpose: Gets or sets the dropdown arrow label control
 Public Property Set DropArrow(ByRef label As MSForms.label)
     Set mDropArrow = label
 End Property
@@ -689,6 +814,8 @@ Public Property Get DropArrow() As MSForms.label
     Set DropArrow = mDropArrow
 End Property
 
+' Property: BtnClear
+' Purpose: Gets or sets the clear button label control
 Public Property Set BtnClear(ByRef label As MSForms.label)
     Set mBtnClear = label
 End Property
@@ -697,6 +824,8 @@ Public Property Get BtnClear() As MSForms.label
     Set BtnClear = mBtnClear
 End Property
 
+' Property: TgBorder
+' Purpose: Gets or sets the toggle border label control
 Public Property Set TgBorder(ByRef label As MSForms.label)
     Set mTgBorder = label
 End Property
@@ -705,6 +834,8 @@ Public Property Get TgBorder() As MSForms.label
     Set TgBorder = mTgBorder
 End Property
 
+' Property: ChkBoxBtn
+' Purpose: Gets or sets the checkbox button label control
 Public Property Set ChkBoxBtn(ByRef label As MSForms.label)
     Set mChkBoxBtn = label
 End Property
@@ -713,6 +844,8 @@ Public Property Get ChkBoxBtn() As MSForms.label
     Set ChkBoxBtn = mChkBoxBtn
 End Property
 
+' Property: ChkBoxCaption
+' Purpose: Gets or sets the checkbox caption label control
 Public Property Set ChkBoxCaption(ByRef label As MSForms.label)
     Set mChkBoxCaption = label
 End Property
@@ -721,32 +854,40 @@ Public Property Get ChkBoxCaption() As MSForms.label
     Set ChkBoxCaption = mChkBoxCaption
 End Property
 
+' Property: Count
+' Purpose: Gets the number of items in the collection
 Public Property Get Count() As Byte
-    Count = mItems.Count
+    Count = mStyleItems.Count
 End Property
 
+' Property: getItemByIndex
+' Purpose: Gets an item from the collection by index
 Public Property Get getItemByIndex(ByVal index As Integer) As clsModernStyle
     On Error GoTo endGetItem
-    Set getItemByIndex = mItems(index)
+    Set getItemByIndex = mStyleItems(index)
     Exit Property
 endGetItem:
     Err.Clear
 End Property
 
+' Property: getItemByName
+' Purpose: Gets an item from the collection by name
 Public Property Get getItemByName(ByVal Name As String) As clsModernStyle
     On Error GoTo endGetItem
-    Set getItemByName = mItems(Name)
+    Set getItemByName = mStyleItems(Name)
     Exit Property
 endGetItem:
     Err.Clear
 End Property
 
+' Property: Version
+' Purpose: Gets version information about the class
 Public Property Get Version() As String
-    Version = "Version: 1.0.6" & vbNewLine & _
+    Version = "Version: 1.0.9" & vbNewLine & _
             "Author: VBATools" & vbNewLine & _
             "License: Apache" & vbNewLine & _
             "Date of creation: 10.10.2025 15:30" & vbNewLine & _
-            "Date of update: 01.11.2025 09:59"
+            "Date of update: 03.11.2025 09:01"
 End Property
 
 '================================================================================
@@ -762,7 +903,7 @@ End Property
 '   ColorBarBottomOn - Bottom line color in active state
 '   ColorBarBottomOff - Bottom line color in inactive state
 '   ColorBackGroundOn - Background color in active state
-'   ColorBackGroundOff - Background color in inactive state
+'   ColorBackGroundOff - Background color inactive state
 '   ColorBarIconOn - Icon color in active state
 '   ColorBarIconOff - Icon color in inactive state
 '   ColorDropArrowOn - Dropdown arrow color in active state
@@ -803,85 +944,88 @@ Public Sub Initialize(ByRef Form As MSForms.UserForm, _
         Optional ChrOptBoxBtnOff As enumIcons = CircleRing)
 
     On Error GoTo ErrorHandler
-    Set myForm = Form
-    Set mItems = New Collection
+    Set mUserForm = Form
+    If mStyleItems Is Nothing Then Set mStyleItems = New Collection
     Dim cntrl       As MSForms.control
     Dim itemStyle   As clsModernStyle
 
     ' Loop through all controls on the form
-    For Each cntrl In myForm.Controls
-        Set itemStyle = New clsModernStyle
-        With itemStyle
-            Set .control = cntrl
-            .ControlType = TypeName(.control)
+    For Each cntrl In mUserForm.Controls
+        ' Check if control already exists in collection to avoid duplicates
+        If Not IsControlInCollection(cntrl.Name) Then
+            Set itemStyle = New clsModernStyle
+            With itemStyle
+                Set .control = cntrl
+                .ControlType = TypeName(.control)
 
-            .Visible = .control.Visible
-            .Enabled = .control.Enabled
-            Select Case .ControlType
-                Case CONTROL_TYPE_LABEL, CONTROL_TYPE_FRAME, CONTROL_TYPE_MULTI_PAGE, _
-                        CONTROL_TYPE_IMAGE, CONTROL_TYPE_TABSTRIP, CONTROL_TYPE_SCROLLBAR, CONTROL_TYPE_SPINBUTTON
-                Case Else
-                    .Locked = .control.Locked
-            End Select
+                .Visible = .control.Visible
+                .Enabled = .control.Enabled
+                Select Case .ControlType
+                    Case CONTROL_TYPE_LABEL, CONTROL_TYPE_FRAME, CONTROL_TYPE_MULTI_PAGE, _
+                            CONTROL_TYPE_IMAGE, CONTROL_TYPE_TABSTRIP, CONTROL_TYPE_SCROLLBAR, CONTROL_TYPE_SPINBUTTON
+                    Case Else
+                        .Locked = .control.Locked
+                End Select
 
-            ' Setting default colors
-            .ColorBarTitleOn = ColorBarTitleOn
-            .ColorBarTitleOff = ColorBarTitleOff
-            .ColorBarBottomOn = ColorBarBottomOn
-            .ColorBarBottomOff = ColorBarBottomOff
-            .ColorBackGroundOn = ColorBackGroundOn
-            .ColorBackGroundOff = ColorBackGroundOff
-            .ColorBarIconOn = ColorBarIconOn
-            .ColorBarIconOff = ColorBarIconOff
-            .ColorDropArrowOn = ColorDropArrowOn
-            .ColorDropArrowOff = ColorDropArrowOff
+                ' Setting default colors
+                .ColorBarTitleOn = ColorBarTitleOn
+                .ColorBarTitleOff = ColorBarTitleOff
+                .ColorBarBottomOn = ColorBarBottomOn
+                .ColorBarBottomOff = ColorBarBottomOff
+                .ColorBackGroundOn = ColorBackGroundOn
+                .ColorBackGroundOff = ColorBackGroundOff
+                .ColorBarIconOn = ColorBarIconOn
+                .ColorBarIconOff = ColorBarIconOff
+                .ColorDropArrowOn = ColorDropArrowOn
+                .ColorDropArrowOff = ColorDropArrowOff
 
-            .ColorTgBorderOff = ColorTgBorderOff
-            .ColorTgBorderOn = ColorTgBorderOn
-            .ColorChkBoxBtnOff = ColorChkBoxBtnOff
-            .ColorChkBoxBtnOn = ColorChkBoxBtnOn
+                .ColorTgBorderOff = ColorTgBorderOff
+                .ColorTgBorderOn = ColorTgBorderOn
+                .ColorChkBoxBtnOff = ColorChkBoxBtnOff
+                .ColorChkBoxBtnOn = ColorChkBoxBtnOn
 
-            .ColorChkBoxCaptionOn = ColorChkBoxCaptionOn
-            .ColorChkBoxCaptionOff = ColorChkBoxCaptionOff
+                .ColorChkBoxCaptionOn = ColorChkBoxCaptionOn
+                .ColorChkBoxCaptionOff = ColorChkBoxCaptionOff
 
-            ' Setting characters for arrow
-            .ChrDropArrowOn = VBA.ChrW(ChrDropArrowOn)
-            .ChrDropArrowOff = VBA.ChrW$(ChrDropArrowOff)
+                ' Setting characters for arrow
+                .ChrDropArrowOn = VBA.ChrW(ChrDropArrowOn)
+                .ChrDropArrowOff = VBA.ChrW$(ChrDropArrowOff)
 
-            .ChrChkBoxBtnOff = VBA.ChrW(ChrChkBoxBtnOff)
-            .ChrChkBoxBtnOn = VBA.ChrW(ChrChkBoxBtnOn)
+                .ChrChkBoxBtnOff = VBA.ChrW(ChrChkBoxBtnOff)
+                .ChrChkBoxBtnOn = VBA.ChrW(ChrChkBoxBtnOn)
 
-            .ChrOptBoxBtnOff = VBA.ChrW(ChrOptBoxBtnOff)
-            .ChrOptBoxBtnOn = VBA.ChrW(ChrOptBoxBtnOn)
+                .ChrOptBoxBtnOff = VBA.ChrW(ChrOptBoxBtnOff)
+                .ChrOptBoxBtnOn = VBA.ChrW(ChrOptBoxBtnOn)
 
-            ' Setting main properties
-            .ControlTipText = .control.ControlTipText
-            .Name = .control.Name
-            .top = .control.top
-            .left = .control.left
-            .height = .control.height
-            .width = .control.width
+                ' Setting main properties
+                .ControlTipText = .control.ControlTipText
+                .Name = .control.Name
+                .top = .control.top
+                .left = .control.left
+                .height = .control.height
+                .width = .control.width
 
-            Select Case .ControlType
-                Case CONTROL_TYPE_IMAGE, CONTROL_TYPE_SCROLLBAR, CONTROL_TYPE_SPINBUTTON
-                Case Else:
-                    .FontSizeTitleOff = .control.Font.Size
-                    .FontSizeTitleOn = .FontSizeTitleOff * 0.95
-                    .FontName = .control.Font.Name
-            End Select
+                Select Case .ControlType
+                    Case CONTROL_TYPE_IMAGE, CONTROL_TYPE_SCROLLBAR, CONTROL_TYPE_SPINBUTTON
+                    Case Else:
+                        .FontSizeTitleOff = .control.Font.Size
+                        .FontSizeTitleOn = .FontSizeTitleOff * 0.95
+                        .FontName = .control.Font.Name
+                End Select
 
-            ' Applying style depending on control type
-            Call ApplyControlStyle(itemStyle)
+                ' Applying style depending on control type
+                Call ApplyControlStyle(itemStyle)
 
-            Call mItems.Add(itemStyle, .Name)
-            Set .Items = mItems
+                Call mStyleItems.Add(itemStyle, .Name)
+                Set .StyleItems = mStyleItems
 
-            ' Activating style for elements with already entered values
-            Select Case .ControlType
-                Case CONTROL_TYPE_TEXTBOX, CONTROL_TYPE_COMBOBOX, CONTROL_TYPE_LISTBOX
-                    If .control.Value <> vbNullString Then Call HandleEnterEvent
-            End Select
-        End With
+                ' Activating style for elements with already entered values
+                Select Case .ControlType
+                    Case CONTROL_TYPE_TEXTBOX, CONTROL_TYPE_COMBOBOX, CONTROL_TYPE_LISTBOX
+                        If .control.Value <> vbNullString Then Call HandleEnterEvent
+                End Select
+            End With
+        End If
     Next cntrl
     Exit Sub
 
@@ -889,6 +1033,7 @@ ErrorHandler:
     ' Error handling
     MsgBox "Error initializing style: " & Err.Description, vbCritical
 End Sub
+
 '================================================================================
 ' Section: Methods for setting control styles
 '================================================================================
@@ -947,6 +1092,7 @@ Private Sub ApplyControlStyle(ByRef itemStyle As clsModernStyle)
         End Select
     End With
 End Sub
+
 '---------------------------------------------------------------------------------------
 ' Procedure: SetCommonStyleProperties
 ' Purpose: Setting common style properties for a control
@@ -965,6 +1111,7 @@ Private Sub SetCommonStyleProperties(ByRef itemStyle As clsModernStyle)
         End With
     End With
 End Sub
+
 '---------------------------------------------------------------------------------------
 ' Procedure: setTextBoxStyle
 ' Purpose: Setting style for text box
@@ -978,12 +1125,13 @@ Private Sub setTextBoxStyle(ByRef itemStyle As clsModernStyle, _
     With itemStyle
         With .control
             If VBA.LCase$(itemStyle.Name) Like "*password*" Then
-                If sPasswordChar = vbNullString Then sPasswordChar = VBA.chr$(sPasswordChar)
+                If sPasswordChar = vbNullString Then sPasswordChar = VBA.ChrW$(PasswordChar)
                 .PasswordChar = sPasswordChar
             End If
         End With
     End With
 End Sub
+
 '---------------------------------------------------------------------------------------
 ' Procedure: setComboBoxStyle
 ' Purpose: Setting style for combo box
@@ -1000,6 +1148,7 @@ Private Sub setComboBoxStyle(ByRef itemStyle As clsModernStyle)
         End With
     End With
 End Sub
+
 '---------------------------------------------------------------------------------------
 ' Procedure: setListBoxStyle
 ' Purpose: Setting style for list box
@@ -1017,7 +1166,7 @@ Private Sub setListBoxStyle(ByRef itemStyle As clsModernStyle)
         End With
     End With
 End Sub
-'Adding control styles * * * * * *
+
 '================================================================================
 ' Section: Methods for adding styles to controls
 '================================================================================
@@ -1039,6 +1188,7 @@ Private Function CreateStyledLabel(ByRef itemStyle As clsModernStyle, _
         .ZOrder zIndex
     End With
 End Function
+
 '---------------------------------------------------------------------------------------
 ' Procedure: SetCommonFontProperties
 ' Purpose: Setting common font properties for a control
@@ -1052,6 +1202,7 @@ Private Sub SetCommonFontProperties(ByRef label As MSForms.label, ByRef itemStyl
         .Font.Size = itemStyle.FontSizeTitleOff
     End With
 End Sub
+
 '---------------------------------------------------------------------------------------
 ' Procedure: addBarBottom
 ' Purpose: Adding bottom style line for control
@@ -1071,6 +1222,7 @@ Private Sub addBarBottom(ByRef itemStyle As clsModernStyle)
         End With
     End With
 End Sub
+
 '---------------------------------------------------------------------------------------
 ' Procedure: addBarTitle
 ' Purpose: Adding style title for control
@@ -1100,6 +1252,7 @@ Private Sub addBarTitle(ByRef itemStyle As clsModernStyle)
         End With
     End With
 End Sub
+
 '---------------------------------------------------------------------------------------
 ' Procedure: addBarIcon
 ' Purpose: Adding style icon for control
@@ -1125,6 +1278,7 @@ Private Sub addBarIcon(ByRef itemStyle As clsModernStyle)
         End With
     End With
 End Sub
+
 '---------------------------------------------------------------------------------------
 ' Procedure: addBackGround
 ' Purpose: Adding style background for control
@@ -1145,6 +1299,7 @@ Private Sub addBackGround(ByRef itemStyle As clsModernStyle)
         End With
     End With
 End Sub
+
 '---------------------------------------------------------------------------------------
 ' Procedure: addDropArrow
 ' Purpose: Adding dropdown arrow style for control
@@ -1170,6 +1325,7 @@ Private Sub addDropArrow(ByRef itemStyle As clsModernStyle)
         End With
     End With
 End Sub
+
 '---------------------------------------------------------------------------------------
 ' Procedure: addBtnClear
 ' Purpose: Adding clear button style for control
@@ -1194,6 +1350,7 @@ Private Sub addBtnClear(ByRef itemStyle As clsModernStyle)
         End With
     End With
 End Sub
+
 '---------------------------------------------------------------------------------------
 ' Procedure: addCheckBox
 ' Purpose: Adding checkbox style for control
@@ -1258,6 +1415,7 @@ Private Sub addCheckBox(ByRef itemStyle As clsModernStyle, ByRef ChrChkBoxBtnOff
         End If
     End With
 End Sub
+
 '---------------------------------------------------------------------------------------
 ' Procedure: addCheckBoxSwitch
 ' Purpose: Adding switch style for control
@@ -1343,16 +1501,18 @@ Private Sub addCheckBoxSwitch(ByRef itemStyle As clsModernStyle)
         End If
     End With
 End Sub
+
 '---------------------------------------------------------------------------------------
 ' Procedure: HandleExitEvent
 ' Purpose: Reset style for all controls
 '---------------------------------------------------------------------------------------
 Private Sub HandleExitEvent()
     Dim item        As clsModernStyle
-    For Each item In Me.Items
+    For Each item In Me.StyleItems
         Call exitControl(item)
     Next item
 End Sub
+
 '---------------------------------------------------------------------------------------
 ' Procedure: exitControl
 ' Purpose: Reset control style on focus loss
@@ -1365,7 +1525,7 @@ Private Sub exitControl(ByRef itemStyle As clsModernStyle)
         Select Case .ControlType
             Case CONTROL_TYPE_TEXTBOX, CONTROL_TYPE_COMBOBOX, CONTROL_TYPE_LISTBOX:
                 With .BarTitle
-                    If VBA.Len(itemStyle.control) = 0 Then
+                    If VBA.Len(Trim(itemStyle.control.Value)) = 0 Then
                         .ForeColor = itemStyle.ColorBarTitleOff
                         .top = itemStyle.top
                         .left = itemStyle.left + 2
@@ -1402,6 +1562,7 @@ Private Sub exitControl(ByRef itemStyle As clsModernStyle)
         End Select
     End With
 End Sub
+
 '---------------------------------------------------------------------------------------
 ' Procedure: btnClearVisible
 ' Purpose: Managing visibility of clear button for control
@@ -1413,6 +1574,7 @@ Private Sub btnClearVisible(ByRef itemStyle As clsModernStyle, ByRef bVisible As
     If itemStyle.BtnClear Is Nothing Then Exit Sub
     itemStyle.BtnClear.Visible = bVisible
 End Sub
+
 '---------------------------------------------------------------------------------------
 ' Procedure: HandleEnterEvent
 ' Purpose: Activating control style on focus gain
@@ -1451,6 +1613,7 @@ Private Sub HandleEnterEvent()
         End Select
     End With
 End Sub
+
 '================================================================================
 ' Section: Control event handling
 '================================================================================
@@ -1492,7 +1655,7 @@ Private Sub mComboBox_MouseDown(ByVal Button As Integer, ByVal Shift As Integer,
 End Sub
 
 ' Event handlers for style reset (focus loss)
-Private Sub myForm_Click()
+Private Sub mUserForm_Click()
     Call HandleExitEvent
 End Sub
 
@@ -1604,6 +1767,7 @@ Private Sub UpdateSwitchVisualState(ByVal isEnabled As Boolean)
         End If
     End With
 End Sub
+
 '---------------------------------------------------------------------------------------
 ' Procedure: IsControlActive
 ' Purpose: Helper method to check if control is active
@@ -1636,3 +1800,47 @@ Private Sub ConfigureStyleElement(ByRef element As MSForms.label, _
         .top = top
     End With
 End Sub
+
+'---------------------------------------------------------------------------------------
+' Function: IsControlInCollection
+' Purpose: Check if control already exists in the collection
+' Parameters:
+'   controlName - Name of the control to check
+' Returns: True if control exists in collection, False otherwise
+'---------------------------------------------------------------------------------------
+Private Function IsControlInCollection(ByVal controlName As String) As Boolean
+    Dim tempItem    As clsModernStyle
+    Set tempItem = getItemByName(controlName)
+    If Not tempItem Is Nothing Then IsControlInCollection = True
+End Function
+
+'---------------------------------------------------------------------------------------
+' Procedure: Class_Terminate
+' Purpose: Clean up objects when class is terminated
+'---------------------------------------------------------------------------------------
+Private Sub Class_Terminate()
+    ' Clean up event handler objects
+    Set mUserForm = Nothing
+    Set mTextBox = Nothing
+    Set mComboBox = Nothing
+    Set mListBox = Nothing
+    Set mFrame = Nothing
+    Set mLabel = Nothing
+    Set mCommandButton = Nothing
+    Set mCheckBox = Nothing
+    Set mOptionButton = Nothing
+    
+    ' Clean up style elements
+    Set mStyleItems = Nothing
+    Set mControl = Nothing
+    Set mBarBottom = Nothing
+    Set mBarTitle = Nothing
+    Set mBarIcon = Nothing
+    Set mBackGround = Nothing
+    Set mDropArrow = Nothing
+    Set mBtnClear = Nothing
+    Set mTgBorder = Nothing
+    Set mChkBoxBtn = Nothing
+    Set mChkBoxCaption = Nothing
+End Sub
+
