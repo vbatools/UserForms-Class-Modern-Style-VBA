@@ -1,6 +1,6 @@
 # VBA Modern Style Class
 
-![User Form Example](User_Forms.png)
+![User Form Example](User_Forms.gif)
 
 A VBA class library that provides modern styling for MSForms controls in Excel applications. This class enhances the appearance of UserForms with contemporary design elements, animations, and improved visual feedback.
 
