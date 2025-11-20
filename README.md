@@ -160,3 +160,19 @@ style.Initialize Me
 ```
 
 The icon will appear to the left of the control. You can use any of the icon constants defined in the `enumIcons` enumeration in the clsModernStyle class. Icons are displayed using the Segoe MDL2 Assets font.
+
+## Documentation
+
+For comprehensive documentation, please refer to the following files in the `docs` folder:
+
+- [Technical Documentation (English)](docs/technical_documentation_en.md)
+- [User Guide (English)](docs/user_guide_en.md)
+- [Implementation Examples (English)](docs/implementation_examples_en.md)
+
+## Документация
+
+Для получения полной документации см. следующие файлы в папке `docs`:
+
+- [Техническая документация (Русский)](docs/technical_documentation_ru.md)
+- [Руководство пользователя (Русский)](docs/user_guide_ru.md)
+- [Примеры реализации (Русский)](docs/implementation_examples_ru.md)
