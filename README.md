@@ -1,8 +1,18 @@
 # VBA Modern Style Class
 
-![User Form Example](User_Forms.gif)
+![Project Demo](User_Forms.gif)
 
-A VBA class library that provides modern styling for MSForms controls in Excel applications. This class enhances the appearance of UserForms with contemporary design elements, animations, and improved visual feedback.
+This repository contains a VBA class library implementation that provides modern styling for MSForms controls in Excel applications. The class enhances the appearance of UserForms with contemporary design elements, animations, and improved visual feedback.
+
+## Table of Contents
+1. [Features](#features)
+2. [Components](#components)
+3. [Installation](#installation)
+4. [Quick Start](#quick-start)
+5. [Main Functions](#main-functions)
+6. [Working with Controls](#working-with-controls)
+7. [Style Configuration](#style-configuration)
+8. [Troubleshooting](#troubleshooting)
 
 ## Features
 
@@ -14,16 +24,18 @@ A VBA class library that provides modern styling for MSForms controls in Excel a
 - **Toggle Switches**: Modern toggle switch styling for checkboxes and option buttons
 - **Responsive Labels**: Labels that animate when controls receive input
 
-## Supported Controls
+## Components
 
-- TextBox
-- ComboBox
-- ListBox
-- CheckBox
-- OptionButton
-- Frame
-- Label
-- CommandButton
+- `clsModernStyle.cls`: The main class implementation
+- `frmTest.frm`: Test form demonstrating usage
+- `modShowForms.bas`: Module containing form display functions
+- Documentation in the `docs/` folder:
+  - [`docs/technical_documentation_en.md`](docs/technical_documentation_en.md) - Technical documentation in English
+ - [`docs/technical_documentation_ru.md`](docs/technical_documentation_ru.md) - Technical documentation in Russian
+ - [`docs/user_guide_en.md`](docs/user_guide_en.md) - User guide in English
+  - [`docs/user_guide_ru.md`](docs/user_guide_ru.md) - User guide in Russian
+ - [`docs/implementation_examples_en.md`](docs/implementation_examples_en.md) - Implementation examples in English
+  - [`docs/implementation_examples_ru.md`](docs/implementation_examples_ru.md) - Implementation examples in Russian
 
 ## Installation
 
@@ -31,8 +43,9 @@ A VBA class library that provides modern styling for MSForms controls in Excel a
 2. Import the class into your VBA project
 3. Ensure you have the Microsoft Forms 2.0 Object Library referenced in your project
 
-## Usage
+## Quick Start
 
+### Simple Usage Example
 ```vba
 ' Create an instance of clsModernStyle class
 Set style = New clsModernStyle
@@ -43,8 +56,37 @@ style.Initialize Me ' where Me is the UserForm
 ' The class automatically applies modern styling to all compatible controls on the form
 ```
 
-### Advanced Usage with Custom Colors
+## Main Functions
 
+- **Styling Initialization**: The `Initialize` method applies modern styling to all compatible controls on the form
+- **Color Configuration**: Ability to configure colors for various controls and states
+- **Icon Support**: Using icons from the Segoe MDL2 Assets font for various controls
+- **Animations**: Visual feedback during interaction with controls
+- **Clear Buttons**: Automatic clear buttons for textboxes and combo boxes
+
+## Working with Controls
+
+The `clsModernStyle` class supports styling of the following controls:
+- TextBox
+- ComboBox
+- ListBox
+- CheckBox
+- OptionButton
+- Frame
+- Label
+- CommandButton
+
+For each control type, appropriate styling is implemented, taking into account the specific interaction features with the user.
+
+## Style Configuration
+
+The class allows customization of:
+- Colors for various controls
+- Fonts and text sizes
+- Visibility and enabled state of controls
+- Interaction behavior (animations, effects)
+
+For color configuration, you can use initialization parameters:
 ```vba
 ' Initialize with custom colors
 Set style = New clsModernStyle
@@ -57,122 +99,18 @@ style.Initialize Me, _
     ColorBackGroundOff:=RGB(245, 245, 245)
 ```
 
-### Creating Toggle Switches
+## Troubleshooting
 
-To create a toggle switch instead of a regular checkbox, set the Tag property of the control to "SWITCH":
+### Display Issues
+- Ensure Microsoft Forms 2.0 Object Library is enabled in references
+- Check that controls are added before calling the Initialize method
+- Ensure the MultiUse property is set to True for the class
 
-```vba
-' In the UserForm designer, set the Tag property of a CheckBox to "SWITCH"
-' Or programmatically:
-MyCheckBox.Tag = "SWITCH"
-```
-
-## Icons
-
-The class includes an enumeration of icons that can be used with controls:
-
-- ArrowOff, ArrowOn (for dropdowns)
-- CheckBox1, CheckboxComposite, CheckboxFill
-- CheckMark
-- CircleFill, CircleRing (for option buttons)
-- FavoriteStar, FavoriteStarFill
-- Heart, HeartFill
-- PasswordChar
-- RadioBtnOff, RadioBtnOn
-- ToggleOff, ToggleOn, ToggleThumb
-
-## Customization Options
-
-The class allows customization of:
-
-- Font sizes for active and inactive states
-- Colors for various control elements
-- Character sets for different control types
-- Visibility and enabled state of controls
-
-## Version
-
-- Version: 1.0.8
-- Creation Date: 10.10.2025 15:30
-- Update Date: 01.11.2025 09:59
-- Author: VBATools
+### Interaction Issues
+- Check that control events are not overloaded with other handlers
+- Ensure control properties are not changed manually while the class is running
+- Verify that the class is not initialized multiple times
 
 ## License
 
 This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
-
-## Dependencies
-
-- Microsoft Forms 2.0 Object Library
-- VBA (Visual Basic for Applications)
-
-## Examples
-
-The repository includes a test form (`frmTest.frm`) demonstrating the capabilities of the class. You can use this as a reference for implementing the styling in your own projects.
-
-## Accessing Individual Controls
-
-The clsModernStyle class provides methods to access individual styled controls:
-
-- `getItemByIndex(index As Integer) As clsModernStyle` - Returns a control style object by its index position
-- `getItemByName(Name As String) As clsModernStyle` - Returns a control style object by its name
-
-These methods allow you to programmatically modify the appearance or behavior of specific controls after the initial styling has been applied.
-
-## Additional Properties
-
-The class also provides the following properties for managing and retrieving information about styled controls:
-
-- `Count As Byte` - Returns the total number of styled controls in the collection
-- `Items As Collection` - Returns the collection of all styled control objects
-- `Version As String` - Returns version information about the clsModernStyle class
-
-## Setting Title Text via ControlTipText
-
-You can set the title text that appears above controls by using the `ControlTipText` property of your form controls. The clsModernStyle class automatically uses this property to display titles:
-
-```vba
-' Set the ControlTipText property in your UserForm controls
-MyTextBox.ControlTipText = "Enter your name"
-MyComboBox.ControlTipText = "Select an option"
-MyCheckBox.ControlTipText = "Agree to terms"
-
-' When you initialize the style, the ControlTipText will be used as the title
-Set style = New clsModernStyle
-style.Initialize Me
-```
-
-The title will appear above the control when it receives focus and will animate to a smaller size and move to the top-left corner when the control has content.
-
-## Setting Icons
-
-You can set icons for controls by using the `Tag` property of your form controls. The clsModernStyle class uses this property to display icons:
-
-```vba
-' Set the Tag property to an icon constant from the enumIcons enumeration
-MyTextBox.Tag = 59193  ' Using numeric value for icon
-' Or use the enum value if available in your VBA environment
-MyComboBox.Tag = "61735"  ' Using string value for icon
-
-' When you initialize the style, the Tag will be used as the icon
-Set style = New clsModernStyle
-style.Initialize Me
-```
-
-The icon will appear to the left of the control. You can use any of the icon constants defined in the `enumIcons` enumeration in the clsModernStyle class. Icons are displayed using the Segoe MDL2 Assets font.
-
-## Documentation
-
-For comprehensive documentation, please refer to the following files in the `docs` folder:
-
-- [Technical Documentation (English)](docs/technical_documentation_en.md)
-- [User Guide (English)](docs/user_guide_en.md)
-- [Implementation Examples (English)](docs/implementation_examples_en.md)
-
-## Документация
-
-Для получения полной документации см. следующие файлы в папке `docs`:
-
-- [Техническая документация (Русский)](docs/technical_documentation_ru.md)
-- [Руководство пользователя (Русский)](docs/user_guide_ru.md)
-- [Примеры реализации (Русский)](docs/implementation_examples_ru.md)
