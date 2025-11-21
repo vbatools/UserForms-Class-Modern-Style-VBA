@@ -1,15 +1,16 @@
 # Technical Documentation for VBA Modern Style UserForms Project
 
 ## Table of Contents
-1. [Project Overview](#project-overview)
-2. [Class Architecture clsModernStyle](#class-architecture-clsmodernstyle)
-3. [Class Properties Detail](#class-properties-detail)
-4. [Class Methods Detail](#class-methods-detail)
-5. [Events and Event Handling](#events-and-event-handling)
-6. [Enumerations and Constants](#enumerations-and-constants)
-7. [Internal Structure and Helper Methods](#internal-structure-and-helper-methods)
+1. [Class Overview](#class-overview)
+2. [Class Architecture](#class-architecture)
+3. [Properties](#properties)
+4. [Methods](#methods)
+5. [Events](#events)
+6. [Constants and Enumerations](#constants-and-enumerations)
+7. [Implementation Details](#implementation-details)
+8. [Dependencies](#dependencies)
 
-## Project Overview
+## Class Overview
 
 The VBA Modern Style UserForms project is a VBA class library designed to style MSForms controls in Excel. The main class `clsModernStyle` implements modern visual effects, animations, and enhanced visual feedback for custom forms.
 
@@ -23,7 +24,7 @@ The `clsModernStyle` class is designed to apply modern design to MSForms control
 - Adding icons and visual elements
 - Managing visibility and state of controls
 
-## Class Architecture clsModernStyle
+## Class Architecture
 
 ### Event Handlers
 The class uses events to track changes in controls:
@@ -48,351 +49,176 @@ The class stores information about controls in a collection:
 - `mControlName` - control name
 - `mControlTipText` - tooltip text
 
-## Class Properties Detail
+### Core Class Properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `control` | MSForms.control | The main control being styled |
+| `ControlType` | String | The type of control (e.g., "TextBox", "ComboBox") |
+| `Name` | String | The name of the control |
+| `ControlTipText` | String | The tooltip text for the control |
+| `Visible` | Boolean | The visibility of the control and all associated style elements |
+| `Locked` | Boolean | The locking state of the control and all associated style elements |
+| `Enabled` | Boolean | The enabled state of the control and all associated style elements |
+| `top` | Single | The top position of the control |
+| `left` | Single | The left position of the control |
+| `height` | Single | The height of the control |
+| `width` | Single | The width of the control |
+| `FontSizeTitleOff` | Integer | The font size for inactive state |
+| `FontSizeTitleOn` | Integer | The font size for active state |
+| `FontName` | String | The font name for the control |
+
+## Properties
 
 ### Main Control Properties
-- `control` - the main control being styled
-  - Type: `MSForms.control`
-  - Purpose: Getting or setting the main control that will be styled
-
-- `ControlType` - the type of control
-  - Type: `String`
-  - Purpose: Getting or setting the type of control (e.g., "TextBox", "ComboBox")
-
-- `Name` - the name of the control
-  - Type: `String`
- - Purpose: Getting or setting the name of the control
-
-- `ControlTipText` - tooltip text
-  - Type: `String`
-  - Purpose: Getting or setting the tooltip text for the control
+- `control` - Gets or sets the main control that will be styled
+- `ControlType` - Gets or sets the type of control (e.g., "TextBox", "ComboBox")
+- `Name` - Gets or sets the name of the control
+- `ControlTipText` - Gets or sets the tooltip text for the control
 
 ### Visibility and State Properties
-- `Visible` - visibility of the control
-  - Type: `Boolean`
-  - Purpose: Getting or setting the visibility of the control and all associated style elements
-
-- `Locked` - locking state
-  - Type: `Boolean`
-  - Purpose: Getting or setting the locking state of the control and all associated style elements
-
-- `Enabled` - enabled state
- - Type: `Boolean`
-  - Purpose: Getting or setting the enabled state of the control and all associated style elements
+- `Visible` - Gets or sets the visibility of the control and all associated style elements
+- `Locked` - Gets or sets the locking state of the control and all associated style elements
+- `Enabled` - Gets or sets the enabled state of the control and all associated style elements
 
 ### Positioning and Size Properties
-- `top` - top position
-  - Type: `Single`
-  - Purpose: Getting or setting the top position of the control
-
-- `left` - left position
- - Type: `Single`
-  - Purpose: Getting or setting the left position of the control
-
-- `height` - height
-  - Type: `Single`
-  - Purpose: Getting or setting the height of the control
-
-- `width` - width
-  - Type: `Single`
-  - Purpose: Getting or setting the width of the control
+- `top` - Gets or sets the top position of the control
+- `left` - Gets or sets the left position of the control
+- `height` - Gets or sets the height of the control
+- `width` - Gets or sets the width of the control
 
 ### Font Properties
-- `FontSizeTitleOff` - font size for inactive state
-  - Type: `Integer`
-  - Purpose: Getting or setting the font size for inactive state
-
-- `FontSizeTitleOn` - font size for active state
-  - Type: `Integer`
-  - Purpose: Getting or setting the font size for active state
-
-- `FontName` - font name
- - Type: `String`
-  - Purpose: Getting or setting the font name for the control
+- `FontSizeTitleOff` - Gets or sets the font size for inactive state
+- `FontSizeTitleOn` - Gets or sets the font size for active state
+- `FontName` - Gets or sets the font name for the control
 
 ### Color Properties
-- `ColorBarTitleOn` - title color in active state
-  - Type: `XlRgbColor`
-  - Purpose: Getting or setting the title color in active state
-
-- `ColorBarTitleOff` - title color in inactive state
-  - Type: `XlRgbColor`
-  - Purpose: Getting or setting the title color in inactive state
-
-- `ColorBarBottomOn` - bottom line color in active state
-  - Type: `XlRgbColor`
-  - Purpose: Getting or setting the bottom line color in active state
-
-- `ColorBarBottomOff` - bottom line color in inactive state
-  - Type: `XlRgbColor`
-  - Purpose: Getting or setting the bottom line color in inactive state
-
-- `ColorBackGroundOn` - background color in active state
-  - Type: `XlRgbColor`
-  - Purpose: Getting or setting the background color in active state
-
-- `ColorBackGroundOff` - background color in inactive state
-  - Type: `XlRgbColor`
-  - Purpose: Getting or setting the background color in inactive state
-
-- `ColorBarIconOn` - icon color in active state
-  - Type: `XlRgbColor`
-  - Purpose: Getting or setting the icon color in active state
-
-- `ColorBarIconOff` - icon color in inactive state
-  - Type: `XlRgbColor`
-  - Purpose: Getting or setting the icon color in inactive state
-
-- `ColorDropArrowOn` - dropdown arrow color in active state
-  - Type: `XlRgbColor`
-  - Purpose: Getting or setting the dropdown arrow color in active state
-
-- `ColorDropArrowOff` - dropdown arrow color in inactive state
- - Type: `XlRgbColor`
-  - Purpose: Getting or setting the dropdown arrow color in inactive state
-
-- `ColorTgBorderOn` - toggle border color in active state
-  - Type: `XlRgbColor`
-  - Purpose: Getting or setting the toggle border color in active state
-
-- `ColorTgBorderOff` - toggle border color inactive state
-  - Type: `XlRgbColor`
-  - Purpose: Getting or setting the toggle border color in inactive state
-
-- `ColorChkBoxBtnOn` - checkbox button color in active state
-  - Type: `XlRgbColor`
-  - Purpose: Getting or setting the checkbox button color in active state
-
-- `ColorChkBoxBtnOff` - checkbox button color in inactive state
-  - Type: `XlRgbColor`
-  - Purpose: Getting or setting the checkbox button color in inactive state
-
-- `ColorChkBoxCaptionOn` - checkbox caption color in active state
-  - Type: `Long`
-  - Purpose: Getting or setting the checkbox caption color in active state
-
-- `ColorChkBoxCaptionOff` - checkbox caption color in inactive state
-  - Type: `Long`
-  - Purpose: Getting or setting the checkbox caption color in inactive state
+- `ColorBarTitleOn` - Gets or sets the title color in active state
+- `ColorBarTitleOff` - Gets or sets the title color in inactive state
+- `ColorBarBottomOn` - Gets or sets the bottom line color in active state
+- `ColorBarBottomOff` - Gets or sets the bottom line color in inactive state
+- `ColorBackGroundOn` - Gets or sets the background color in active state
+- `ColorBackGroundOff` - Gets or sets the background color in inactive state
+- `ColorBarIconOn` - Gets or sets the icon color in active state
+- `ColorBarIconOff` - Gets or sets the icon color in inactive state
+- `ColorDropArrowOn` - Gets or sets the dropdown arrow color in active state
+- `ColorDropArrowOff` - Gets or sets the dropdown arrow color in inactive state
+- `ColorTgBorderOn` - Gets or sets the toggle border color in active state
+- `ColorTgBorderOff` - Gets or sets the toggle border color inactive state
+- `ColorChkBoxBtnOn` - Gets or sets the checkbox button color in active state
+- `ColorChkBoxBtnOff` - Gets or sets the checkbox button color in inactive state
+- `ColorChkBoxCaptionOn` - Gets or sets the checkbox caption color in active state
+- `ColorChkBoxCaptionOff` - Gets or sets the checkbox caption color in inactive state
 
 ### Character Properties
-- `ChrDropArrowOn` - dropdown arrow character in active state
-  - Type: `String`
-  - Purpose: Getting or setting the dropdown arrow character in active state
-
-- `ChrDropArrowOff` - dropdown arrow character in inactive state
-  - Type: `String`
- - Purpose: Getting or setting the dropdown arrow character in inactive state
-
-- `ChrChkBoxBtnOn` - checkbox button character in active state
-  - Type: `String`
-  - Purpose: Getting or setting the checkbox button character in active state
-
-- `ChrChkBoxBtnOff` - checkbox button character in inactive state
-  - Type: `String`
-  - Purpose: Getting or setting the checkbox button character in inactive state
-
-- `ChrOptBoxBtnOn` - option button character in active state
- - Type: `String`
-  - Purpose: Getting or setting the option button character in active state
-
-- `ChrOptBoxBtnOff` - option button character in inactive state
-  - Type: `String`
-  - Purpose: Getting or setting the option button character in inactive state
+- `ChrDropArrowOn` - Gets or sets the dropdown arrow character in active state
+- `ChrDropArrowOff` - Gets or sets the dropdown arrow character in inactive state
+- `ChrChkBoxBtnOn` - Gets or sets the checkbox button character in active state
+- `ChrChkBoxBtnOff` - Gets or sets the checkbox button character in inactive state
+- `ChrOptBoxBtnOn` - Gets or sets the option button character in active state
+- `ChrOptBoxBtnOff` - Gets or sets the option button character in inactive state
 
 ### Additional Element Properties
-- `BarBottom` - bottom line of the control
-  - Type: `MSForms.label`
-  - Purpose: Getting or setting the bottom line of the control
-
-- `BarTitle` - title of the control
- - Type: `MSForms.label`
- - Purpose: Getting or setting the title of the control
-
-- `BarIcon` - icon of the control
-  - Type: `MSForms.label`
-  - Purpose: Getting or setting the icon of the control
-
-- `BackGround` - background of the control
- - Type: `MSForms.label`
- - Purpose: Getting or setting the background of the control
-
-- `DropArrow` - dropdown arrow
-  - Type: `MSForms.label`
-  - Purpose: Getting or setting the dropdown arrow
-
-- `BtnClear` - clear button
- - Type: `MSForms.label`
-  - Purpose: Getting or setting the clear button
-
-- `TgBorder` - toggle border
-  - Type: `MSForms.label`
-  - Purpose: Getting or setting the toggle border
-
-- `ChkBoxBtn` - checkbox button
- - Type: `MSForms.label`
-  - Purpose: Getting or setting the checkbox button
-
-- `ChkBoxCaption` - checkbox caption
- - Type: `MSForms.label`
-  - Purpose: Getting or setting the checkbox caption
+- `BarBottom` - Gets or sets the bottom line of the control
+- `BarTitle` - Gets or sets the title of the control
+- `BarIcon` - Gets or sets the icon of the control
+- `BackGround` - Gets or sets the background of the control
+- `DropArrow` - Gets or sets the dropdown arrow
+- `BtnClear` - Gets or sets the clear button
+- `TgBorder` - Gets or sets the toggle border
+- `ChkBoxBtn` - Gets or sets the checkbox button
+- `ChkBoxCaption` - Gets or sets the checkbox caption
 
 ### Collection Properties
-- `StyleItems` - collection of all style items
-  - Type: `Collection`
-  - Purpose: Getting or setting the collection of all style items
+- `StyleItems` - Gets or sets the collection of all style items
+- `Count` - Gets the number of items in the collection
+- `getItemByIndex` - Gets an item from the collection by index
+- `getItemByName` - Gets an item from the collection by name
+- `Version` - Gets version information about the class
 
-- `Count` - number of items in the collection
-  - Type: `Byte`
- - Purpose: Getting the number of items in the collection
-
-- `getItemByIndex` - getting an item from the collection by index
-  - Type: `clsModernStyle`
-  - Purpose: Getting an item from the collection by index
-
-- `getItemByName` - getting an item from the collection by name
-  - Type: `clsModernStyle`
-  - Purpose: Getting an item from the collection by name
-
-- `Version` - version information about the class
-  - Type: `String`
-  - Purpose: Getting version information about the class
-
-## Class Methods Detail
+## Methods
 
 ### Main Initialization Methods
-- `Initialize` - initializes style for all form controls
-  - Parameters:
-    - `Form` - reference to UserForm to which style is applied
-    - `ColorBarTitleOn` - title color in active state (default 14854934)
-    - `ColorBarTitleOff` - title color in inactive state (default 10395294)
-    - `ColorBarBottomOn` - bottom line color in active state (default 14854934)
-    - `ColorBarBottomOff` - bottom line color in inactive state (default 10395294)
-    - `ColorBackGroundOn` - background color in active state (default vbWhite)
-    - `ColorBackGroundOff` - background color inactive state (default 16447476)
-    - `ColorBarIconOn` - icon color in active state (default 14854934)
-    - `ColorBarIconOff` - icon color inactive state (default 10395294)
-    - `ColorDropArrowOn` - dropdown arrow color in active state (default vbBlack)
-    - `ColorDropArrowOff` - dropdown arrow color in inactive state (default 10395294)
-    - `ColorTgBorderOn` - toggle border color in active state (default 14854934)
-    - `ColorTgBorderOff` - toggle border color in inactive state (default 10395294)
-    - `ColorChkBoxBtnOn` - checkbox button color in active state (default vbBlack)
-    - `ColorChkBoxBtnOff` - checkbox button color inactive state (default 10395294)
-    - `ChrDropArrowOn` - dropdown arrow character in active state (default ArrowOn)
-    - `ChrDropArrowOff` - dropdown arrow character in inactive state (default ArrowOff)
-    - `ColorChkBoxCaptionOn` - checkbox caption color in active state (default 14854934)
-    - `ColorChkBoxCaptionOff` - checkbox caption color in inactive state (default 10395294)
-    - `ChrChkBoxBtnOn` - checkbox button character in active state (default CheckboxComposite)
-    - `ChrChkBoxBtnOff` - checkbox button character in inactive state (default CheckBox1)
-    - `ChrOptBoxBtnOn` - option button character in active state (default CircleFill)
-    - `ChrOptBoxBtnOff` - option button character in inactive state (default CircleRing)
-  - Purpose: Initializes style for all controls on the form
+- `Initialize` - Initializes style for all form controls
+
+**Syntax:**
+```vba
+Public Sub Initialize(ByRef Form As MSForms.UserForm, _
+        Optional ColorBarTitleOn As XlRgbColor = 14854934, _
+        Optional ColorBarTitleOff As XlRgbColor = 10395294, _
+        Optional ColorBarBottomOn As XlRgbColor = 14854934, _
+        Optional ColorBarBottomOff As XlRgbColor = 10395294, _
+        Optional ColorBackGroundOn As XlRgbColor = vbWhite, _
+        Optional ColorBackGroundOff As XlRgbColor = 16447476, _
+        Optional ColorBarIconOn As XlRgbColor = 14854934, _
+        Optional ColorBarIconOff As XlRgbColor = 10395294, _
+        Optional ColorDropArrowOn As XlRgbColor = vbBlack, _
+        Optional ColorDropArrowOff As XlRgbColor = 10395294, _
+        Optional ColorTgBorderOn As XlRgbColor = 14854934, _
+        Optional ColorTgBorderOff As XlRgbColor = 10395294, _
+        Optional ColorChkBoxBtnOn As XlRgbColor = vbBlack, _
+        Optional ColorChkBoxBtnOff As XlRgbColor = 10395294, _
+        Optional ChrDropArrowOn As enumIcons = ArrowOn, _
+        Optional ChrDropArrowOff As enumIcons = ArrowOff, _
+        Optional ColorChkBoxCaptionOn As XlRgbColor = 14854934, _
+        Optional ColorChkBoxCaptionOff As XlRgbColor = 10395294, _
+        Optional ChrChkBoxBtnOn As enumIcons = CheckboxComposite, _
+        Optional ChrChkBoxBtnOff As enumIcons = CheckBox1, _
+        Optional ChrOptBoxBtnOn As enumIcons = CircleFill, _
+        Optional ChrOptBoxBtnOff As enumIcons = CircleRing)
+```
+
+**Parameters:**
+- `Form` - reference to UserForm to which style is applied
+- `ColorBarTitleOn` - title color in active state (default 14854934)
+- `ColorBarTitleOff` - title color in inactive state (default 10395294)
+- `ColorBarBottomOn` - bottom line color in active state (default 14854934)
+- `ColorBarBottomOff` - bottom line color in inactive state (default 10395294)
+- `ColorBackGroundOn` - background color in active state (default vbWhite)
+- `ColorBackGroundOff` - background color inactive state (default 1647476)
+- `ColorBarIconOn` - icon color in active state (default 14854934)
+- `ColorBarIconOff` - icon color inactive state (default 10395294)
+- `ColorDropArrowOn` - dropdown arrow color in active state (default vbBlack)
+- `ColorDropArrowOff` - dropdown arrow color in inactive state (default 10395294)
+- `ColorTgBorderOn` - toggle border color in active state (default 14854934)
+- `ColorTgBorderOff` - toggle border color in inactive state (default 10395294)
+- `ColorChkBoxBtnOn` - checkbox button color in active state (default vbBlack)
+- `ColorChkBoxBtnOff` - checkbox button color inactive state (default 10395294)
+- `ChrDropArrowOn` - dropdown arrow character in active state (default ArrowOn)
+- `ChrDropArrowOff` - dropdown arrow character in inactive state (default ArrowOff)
+- `ColorChkBoxCaptionOn` - checkbox caption color in active state (default 14854934)
+- `ColorChkBoxCaptionOff` - checkbox caption color in inactive state (default 10395294)
+- `ChrChkBoxBtnOn` - checkbox button character in active state (default CheckboxComposite)
+- `ChrChkBoxBtnOff` - checkbox button character in inactive state (default CheckBox1)
+- `ChrOptBoxBtnOn` - option button character in active state (default CircleFill)
+- `ChrOptBoxBtnOff` - option button character in inactive state (default CircleRing)
 
 ### Control Styling Methods
 - `ApplyControlStyle` - applies style depending on control type
-  - Parameters:
-    - `itemStyle` - style object for configuration
-  - Purpose: Applies style depending on control type
-
 - `SetCommonStyleProperties` - sets common style properties for a control
-  - Parameters:
-    - `itemStyle` - style object for configuration
-  - Purpose: Setting common style properties for a control
-
 - `setTextBoxStyle` - sets style for text box
-  - Parameters:
-    - `itemStyle` - style object for configuration
-    - `sPasswordChar` - character for displaying password field (optional parameter)
-  - Purpose: Setting style for text box
-
 - `setComboBoxStyle` - sets style for combo box
-  - Parameters:
-    - `itemStyle` - style object for configuration
- - Purpose: Setting style for combo box
-
 - `setListBoxStyle` - sets style for list box
- - Parameters:
-    - `itemStyle` - style object for configuration
-  - Purpose: Setting style for list box
 
 ### Style Element Addition Methods
-- `CreateStyledLabel` - creating and configuring main properties of additional element
-  - Parameters:
-    - `itemStyle` - style object for configuration
-    - `controlName` - name of control
-    - `zIndex` - element placement order (default 1)
-  - Returns: New `MSForms.label` control
-  - Purpose: Creating and configuring main properties of additional element
-
-- `SetCommonFontProperties` - setting common font properties for a control
-  - Parameters:
-    - `label` - `MSForms.label` control
-    - `itemStyle` - style object for configuration
-  - Purpose: Setting common font properties for a control
-
-- `addBarBottom` - adding bottom style line for control
-  - Parameters:
-    - `itemStyle` - style object for configuration
- - Purpose: Adding bottom style line for control
-
-- `addBarTitle` - adding style title for control
-  - Parameters:
-    - `itemStyle` - style object for configuration
- - Purpose: Adding style title for control
-
-- `addBarIcon` - adding style icon for control
-  - Parameters:
-    - `itemStyle` - style object for configuration
- - Purpose: Adding style icon for control
-
-- `addBackGround` - adding style background for control
-  - Parameters:
-    - `itemStyle` - style object for configuration
- - Purpose: Adding style background for control
-
-- `addDropArrow` - adding dropdown arrow style for control
-  - Parameters:
-    - `itemStyle` - style object for configuration
- - Purpose: Adding dropdown arrow style for control
-
-- `addBtnClear` - adding clear button style for control
-  - Parameters:
-    - `itemStyle` - style object for configuration
-  - Purpose: Adding clear button style for control
-
-- `addCheckBox` - adding checkbox style for control
-  - Parameters:
-    - `itemStyle` - style object for configuration
-    - `ChrChkBoxBtnOff` - checkbox button character in inactive state
-    - `ChrChkBoxBtnOn` - checkbox button character in active state
-  - Purpose: Adding checkbox style for control
-
-- `addCheckBoxSwitch` - adding toggle switch style for control
-  - Parameters:
-    - `itemStyle` - style object for configuration
- - Purpose: Adding toggle switch style for control
+- `CreateStyledLabel` - creates and configures main properties of additional element
+- `SetCommonFontProperties` - sets common font properties for a control
+- `addBarBottom` - adds bottom style line for control
+- `addBarTitle` - adds style title for control
+- `addBarIcon` - adds style icon for control
+- `addBackGround` - adds style background for control
+- `addDropArrow` - adds dropdown arrow style for control
+- `addBtnClear` - adds clear button style for control
+- `addCheckBox` - adds checkbox style for control
+- `addCheckBoxSwitch` - adds toggle switch style for control
 
 ### Event Handling Methods
 - `HandleExitEvent` - reset style for all controls
-  - Purpose: Reset style for all controls
-
 - `exitControl` - reset control style on focus loss
-  - Parameters:
-    - `itemStyle` - style object for configuration
- - Purpose: Reset control style on focus loss
-
 - `btnClearVisible` - managing visibility of clear button for control
-  - Parameters:
-    - `itemStyle` - style object for configuration
-    - `bVisible` - button visibility flag
-  - Purpose: Managing visibility of clear button for control
-
 - `HandleEnterEvent` - activating control style on focus gain
- - Purpose: Activating control style on focus gain
 
-## Events and Event Handling
-
-The `clsModernStyle` class uses events to track changes in controls and activate appropriate actions:
+## Events
 
 ### Text Box Events
 - `mTextBox_Change` - text change event in text box
@@ -424,7 +250,7 @@ The `clsModernStyle` class uses events to track changes in controls and activate
 - `mChkBoxCaption_Click` - click event on checkbox caption
 - `mOptionButton_Change` - option button state change event
 
-## Enumerations and Constants
+## Constants and Enumerations
 
 ### Icon Enumeration
 ```vba
@@ -442,12 +268,12 @@ Public Enum enumIcons
     CheckMark = 59198                       ' Checkmark
     CircleFill = 59963                      ' Circle (filled)
     CircleRing = 59962                      ' Circle (outline)
-    FavoriteStar = 59188                    ' Star (normal)
+    FavoriteStar = 5918                    ' Star (normal)
     FavoriteStarFill = 59189                ' Star (filled)
     Heart = 60241                           ' Heart (normal)
     HeartFill = 60242                       ' Heart (filled)
     InkingColorFill = 60775                 ' Brush (filled)
-    InkingColorOutline = 60774              ' Brush (outline)
+    InkingColorOutline = 6074              ' Brush (outline)
     PaginationDotOutline10 = 61734          ' Dot (outline)
     PaginationDotSolid10 = 61735            ' Dot (filled)
     PasswordChar = 149                      ' Character for hiding password
@@ -491,59 +317,22 @@ Private Const BTN_CLEAR As String = "_BtnClear"
 Private Const CONTROL_SWITCH As String = "SWITCH"
 ```
 
-## Internal Structure and Helper Methods
+## Implementation Details
 
 ### Helper Methods
 - `UpdateSwitchState` - internal method to update switch state
-  - Parameters:
-    - `Value` - new switch value
-    - `isChangeValue` - flag indicating whether to change control value
-  - Purpose: Internal method to update switch state
-
 - `UpdateSwitchVisualState` - internal method to update switch visual state
-  - Parameters:
-    - `isEnabled` - flag indicating whether state is enabled
-  - Purpose: Internal method to update switch visual state
-
 - `IsControlActive` - helper method to check if control is active
-  - Parameters:
-    - `itemStyle` - style object for checking
- - Returns: `True` if element is visible, unlocked and available
- - Purpose: Helper method to check if control is active
-
 - `ConfigureStyleElement` - internal method for configuring style element properties
- - Parameters:
-    - `element` - style element to configure
-    - `width` - element width
-    - `height` - element height
-    - `left` - left position
-    - `top` - top position
-  - Purpose: Internal method for configuring style element properties
-
 - `IsControlInCollection` - check if control already exists in the collection
-  - Parameters:
-    - `controlName` - name of the control to check
-  - Returns: `True` if control exists in collection, `False` otherwise
- - Purpose: Check if control already exists in the collection
-
 - `SetControlEnabled` - internal method to set the availability state of a control
-  - Parameters:
-    - `control` - control to change availability state
-    - `isEnabled` - flag for availability state
-  - Purpose: Internal method to set the availability state of a control
-
 - `SetControlVisibility` - internal method to set the visibility of a control
-  - Parameters:
-    - `control` - control to change visibility
-    - `isVisible` - visibility flag
-  - Purpose: Internal method to set the visibility of a control
-
 - `SetControlLock` - internal method to set the locking state of a control
-  - Parameters:
-    - `control` - control to change locking state
-    - `isLocked` - flag for locking state
-  - Purpose: Internal method to set the locking state of a control
 
 ### Cleanup Method
 - `Class_Terminate` - clean up objects when class is terminated
-  - Purpose: Clean up event handler objects and style elements when class is terminated
+
+## Dependencies
+
+- Microsoft Forms 2.0 Object Library
+- VBA runtime environment
