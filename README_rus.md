@@ -35,7 +35,7 @@
 
 ```vba
 ' Создайте экземпляр класса clsModernStyle
-Dim style As New clsModernStyle
+Set style = New clsModernStyle
 
 ' Инициализируйте стилизацию для вашей формы пользователя
 style.Initialize Me ' где Me - это форма пользователя
@@ -47,7 +47,7 @@ style.Initialize Me ' где Me - это форма пользователя
 
 ```vba
 ' Инициализация с настраиваемыми цветами
-Dim style As New clsModernStyle
+Set style = New clsModernStyle
 style.Initialize Me, _
     ColorBarTitleOn:=RGB(0, 100, 200), _
     ColorBarTitleOff:=RGB(120, 120, 120), _
@@ -138,7 +138,7 @@ MyComboBox.ControlTipText = "Выберите опцию"
 MyCheckBox.ControlTipText = "Согласиться с условиями"
 
 ' Когда вы инициализируете стиль, ControlTipText будет использоваться в качестве заголовка
-Dim style As New clsModernStyle
+Set style = New clsModernStyle
 style.Initialize Me
 ```
 
@@ -155,7 +155,7 @@ MyTextBox.Tag = 59193  ' Использование числового знач�
 MyComboBox.Tag = "61735"  ' Использование строкового значения для иконки
 
 ' Когда вы инициализируете стиль, Tag будет использоваться в качестве иконки
-Dim style As New clsModernStyle
+Set style = New clsModernStyle
 style.Initialize Me
 ```
 

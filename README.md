@@ -35,7 +35,7 @@ A VBA class library that provides modern styling for MSForms controls in Excel a
 
 ```vba
 ' Create an instance of clsModernStyle class
-Dim style As New clsModernStyle
+Set style = New clsModernStyle
 
 ' Initialize the styling for your UserForm
 style.Initialize Me ' where Me is the UserForm
@@ -47,7 +47,7 @@ style.Initialize Me ' where Me is the UserForm
 
 ```vba
 ' Initialize with custom colors
-Dim style As New clsModernStyle
+Set style = New clsModernStyle
 style.Initialize Me, _
     ColorBarTitleOn:=RGB(0, 100, 200), _
     ColorBarTitleOff:=RGB(120, 120, 120), _
@@ -138,7 +138,7 @@ MyComboBox.ControlTipText = "Select an option"
 MyCheckBox.ControlTipText = "Agree to terms"
 
 ' When you initialize the style, the ControlTipText will be used as the title
-Dim style As New clsModernStyle
+Set style = New clsModernStyle
 style.Initialize Me
 ```
 
@@ -155,7 +155,7 @@ MyTextBox.Tag = 59193  ' Using numeric value for icon
 MyComboBox.Tag = "61735"  ' Using string value for icon
 
 ' When you initialize the style, the Tag will be used as the icon
-Dim style As New clsModernStyle
+Set style = New clsModernStyle
 style.Initialize Me
 ```
 

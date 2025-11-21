@@ -344,7 +344,7 @@ Public Sub ApplyModernStyleToForm(formName As String)
     Dim frm As Object
     Set frm = VBA.Interaction.CreateObject("Forms." & formName)
     
-    Dim style As New clsModernStyle
+    Set style = New clsModernStyle
     style.Initialize frm
     
     frm.Show
