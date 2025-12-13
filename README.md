@@ -1,6 +1,6 @@
 # VBA Modern Style Class
 
-**English** | [Русский](README_rus.md) | [UserForms-Class-ALL](https://github.com/vbatools/UserForms-Class-ALL/tree/main)
+**English** | [Русский](README_RUS.md) | [UserForms-Class-ALL](https://github.com/vbatools/UserForms-Class-ALL/tree/main)
 
 ![Project Demo](User_Forms.gif)
 
